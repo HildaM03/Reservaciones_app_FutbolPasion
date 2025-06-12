@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "269525143257",
+    "project_id": "reservacanchas-338bf",
+    "storage_bucket": "reservacanchas-338bf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:269525143257:android:afdd456ec7873f4f3838c8",
+        "android_client_info": {
+          "package_name": "com.example.app_reserva_canchas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO7Bwvs3zochBiQGUEb3Oh6ymLqmHFQMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:269525143257:android:bafcb722eaa05f713838c8",
+        "android_client_info": {
+          "package_name": "com.example.reservas_canchas_aplicacion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO7Bwvs3zochBiQGUEb3Oh6ymLqmHFQMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:269525143257:android:f5dd5388329839c73838c8",
+        "android_client_info": {
+          "package_name": "com.example.reservas_canchas_app_proyecto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO7Bwvs3zochBiQGUEb3Oh6ymLqmHFQMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:269525143257:android:8d611a886798eb843838c8",
+        "android_client_info": {
+          "package_name": "com.example.resrevacion_canchas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO7Bwvs3zochBiQGUEb3Oh6ymLqmHFQMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

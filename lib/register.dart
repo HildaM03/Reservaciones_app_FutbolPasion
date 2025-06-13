@@ -16,8 +16,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
 
-  final Color navyBlue = Color(0xFF001F3F);
-  final Color brightBlue = Color(0xFF00BFFF);
+  final Color naranjaOscuro = Color(0xFFE65100);
+  final Color azulOscuro = Color(0xFF0D47A1);
+  final Color blanco = Color(0xFFFFFFFF);
+  final Color gris = Color(0xFF9E9E9E);
 
   bool _loading = false;
 
@@ -45,7 +47,6 @@ class _RegisterPageState extends State<RegisterPage> {
         password: password,
       );
 
-      // Guardar nombre completo en displayName también
       await userCredential.user!.updateDisplayName(fullName);
 
       await FirebaseFirestore.instance.collection('usuarios').doc(userCredential.user!.uid).set({
@@ -75,14 +76,14 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: navyBlue,
+      backgroundColor: naranjaOscuro,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.95),
+              color: blanco.withOpacity(0.95),
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
@@ -101,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    color: navyBlue,
+                    color: naranjaOscuro,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -109,7 +110,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: fullNameCtrl,
                   decoration: InputDecoration(
                     labelText: 'Nombre completo',
-                    prefixIcon: Icon(Icons.person, color: navyBlue),
+                    labelStyle: TextStyle(color: gris),
+                    prefixIcon: Icon(Icons.person, color: azulOscuro),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -118,7 +120,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Número de identidad',
-                    prefixIcon: Icon(Icons.badge, color: navyBlue),
+                    labelStyle: TextStyle(color: gris),
+                    prefixIcon: Icon(Icons.badge, color: azulOscuro),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -127,7 +130,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Correo electrónico',
-                    prefixIcon: Icon(Icons.email, color: navyBlue),
+                    labelStyle: TextStyle(color: gris),
+                    prefixIcon: Icon(Icons.email, color: azulOscuro),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -136,21 +140,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Contraseña',
-                    prefixIcon: Icon(Icons.lock, color: navyBlue),
+                    labelStyle: TextStyle(color: gris),
+                    prefixIcon: Icon(Icons.lock, color: azulOscuro),
                   ),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: _loading ? null : register,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: brightBlue,
+                    backgroundColor: azulOscuro,
+                    foregroundColor: blanco,
                     minimumSize: const Size(double.infinity, 48),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                   child: _loading
-                      ? CircularProgressIndicator(color: Colors.white)
+                      ? CircularProgressIndicator(color: blanco)
                       : const Text('Registrarse', style: TextStyle(fontSize: 18)),
                 ),
               ],

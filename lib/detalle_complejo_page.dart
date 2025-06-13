@@ -13,13 +13,16 @@ class DetalleComplejoPage extends StatefulWidget {
 
 class _DetalleComplejoPageState extends State<DetalleComplejoPage> {
   List<Map<String, dynamic>> canchasDisponibles = [];
-  List<Map<String, dynamic>> canchasReservadas = [];
+
+  // Colores azul y naranja
+  final Color azulOscuro = Color(0xFF0D47A1);
+  final Color naranjaOscuro = Color(0xFFFF6F00);
+  final Color azulClaro = Color(0xFF42A5F5);
 
   @override
   void initState() {
     super.initState();
     canchasDisponibles = List.from(widget.complejo['canchas'] ?? []);
-    canchasReservadas = [];
   }
 
   void _abrirEnMaps(String coordenadas) async {
@@ -34,7 +37,6 @@ class _DetalleComplejoPageState extends State<DetalleComplejoPage> {
   void _reservarCancha(Map<String, dynamic> cancha) {
     setState(() {
       canchasDisponibles.removeWhere((c) => c['nombre'] == cancha['nombre']);
-      canchasReservadas.add({...cancha, 'fechaReserva': DateTime.now()});
     });
   }
 
@@ -43,7 +45,7 @@ class _DetalleComplejoPageState extends State<DetalleComplejoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.complejo['nombre']),
-        backgroundColor: const Color(0xFFD4534E),
+        backgroundColor: naranjaOscuro,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -58,7 +60,7 @@ class _DetalleComplejoPageState extends State<DetalleComplejoPage> {
             const SizedBox(height: 16),
             Row(
               children: [
-                const Icon(Icons.location_on, color: Colors.red),
+                Icon(Icons.location_on, color: azulOscuro),
                 const SizedBox(width: 8),
                 Expanded(child: Text(widget.complejo['ubicacion'] ?? 'Ubicación no disponible')),
               ],
@@ -66,7 +68,7 @@ class _DetalleComplejoPageState extends State<DetalleComplejoPage> {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.phone, color: Colors.blue),
+                Icon(Icons.phone, color: naranjaOscuro),
                 const SizedBox(width: 8),
                 Text(widget.complejo['telefono'] ?? 'Teléfono no disponible'),
               ],
@@ -75,38 +77,61 @@ class _DetalleComplejoPageState extends State<DetalleComplejoPage> {
             if (widget.complejo['coordenadas'] != null)
               GestureDetector(
                 onTap: () => _abrirEnMaps(widget.complejo['coordenadas']),
-                child: const Text(
+                child: Text(
                   'Ver en Google Maps',
-                  style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                  style: TextStyle(
+                    color: azulClaro,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
             const SizedBox(height: 16),
 
             // Canchas disponibles
-            const Text(
+            Text(
               'Canchas disponibles:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: azulOscuro,
+              ),
             ),
             const SizedBox(height: 8),
             ...canchasDisponibles.map<Widget>((cancha) {
               return Card(
+                color: Colors.grey[600],
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 child: ListTile(
-                  title: Text(cancha['nombre']),
-                  subtitle: Text('Jugadores: ${cancha['jugadores']}\nPrecio: ${cancha['precio']}'),
+                  title: Text(
+                    cancha['nombre'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Jugadores: ${cancha['jugadores']}\nPrecio: ${cancha['precio']}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   onTap: () async {
                     final reservaExitosa = await Navigator.push<bool>(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ReservaPage(cancha: cancha),
+                        builder: (context) => ReservaPage(
+                          cancha: cancha,
+                          complejo: widget.complejo, // Pasamos el complejo completo
+                        ),
                       ),
                     );
                     if (reservaExitosa == true) {
                       _reservarCancha(cancha);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           content: Text('Cancha reservada con éxito'),
-                          backgroundColor: Colors.green,
+                          backgroundColor: naranjaOscuro,
                         ),
                       );
                     }
@@ -114,45 +139,6 @@ class _DetalleComplejoPageState extends State<DetalleComplejoPage> {
                 ),
               );
             }).toList(),
-
-            // Canchas reservadas
-            if (canchasReservadas.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              const Text(
-                'Canchas reservadas:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
-              const SizedBox(height: 8),
-              ...canchasReservadas.map<Widget>((cancha) {
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 6),
-                  color: Colors.red[50],
-                  child: ListTile(
-                    title: Text(
-                      cancha['nombre'],
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Jugadores: ${cancha['jugadores']}'),
-                        Text('Precio: ${cancha['precio']}'),
-                        if (cancha['fechaReserva'] != null)
-                          Text(
-                            'Reservado: ${cancha['fechaReserva'].toString().substring(0, 16)}',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                      ],
-                    ),
-                    trailing: const Icon(Icons.check_circle, color: Colors.red),
-                  ),
-                );
-              }).toList(),
-            ],
           ],
         ),
       ),

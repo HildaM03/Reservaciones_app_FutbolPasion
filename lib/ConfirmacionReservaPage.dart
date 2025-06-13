@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:resrevacion_canchas/Reserva_exitosa_page.dart';
 
 class ConfirmacionReservaPage extends StatelessWidget {
   final Map<String, dynamic> cancha;
+  final Map<String, dynamic> complejo;
   final DateTime fecha;
   final String horario;
   final String precio;
@@ -11,6 +13,7 @@ class ConfirmacionReservaPage extends StatelessWidget {
   const ConfirmacionReservaPage({
     super.key,
     required this.cancha,
+    required this.complejo,
     required this.fecha,
     required this.horario,
     required this.precio,
@@ -59,6 +62,8 @@ class ConfirmacionReservaPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  _buildInfoRow('Complejo', complejo['nombre']),
+                  const SizedBox(height: 12),
                   _buildInfoRow('Cancha', '"${cancha['nombre']}"'),
                   const SizedBox(height: 12),
                   _buildInfoRow('Jugadores', cancha['jugadores']),
@@ -298,27 +303,29 @@ class ConfirmacionReservaPage extends StatelessWidget {
       }
 
       final reserva = {
-        'nombre': nombreCompleto,
-        'correo': user.email,
+        'complejo': complejo['nombre'],
         'cancha': cancha['nombre'],
         'jugadores': cancha['jugadores'],
         'precio': 'L. $precio',
         'fecha': fecha.toIso8601String(),
         'horario': horario,
+        'nombre': nombreCompleto,
+        'correo': user.email,
         'timestamp': FieldValue.serverTimestamp(),
+        'complejoTelefono': complejo['telefono'],
+        'complejoUbicacion': complejo['ubicacion'],
       };
 
       await FirebaseFirestore.instance.collection('reservas').add(reserva);
 
-      Navigator.popUntil(context, (route) => route.isFirst);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('¡Reserva confirmada con éxito!'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 3),
+      // Navegar a la pantalla de confirmación exitosa
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReservaExitosaPage(reserva: reserva),
         ),
       );
+
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -328,4 +335,4 @@ class ConfirmacionReservaPage extends StatelessWidget {
       );
     }
   }
-}
+} 

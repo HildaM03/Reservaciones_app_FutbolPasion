@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resrevacion_canchas/ConfirmacionReservaPage.dart';
 
 class ReservaPage extends StatefulWidget {
   final Map<String, dynamic> cancha;
+  final Map<String, dynamic> complejo;
 
-  const ReservaPage({super.key, required this.cancha});
+  const ReservaPage({
+    super.key,
+    required this.cancha,
+    required this.complejo,
+  });
 
   @override
   State<ReservaPage> createState() => _ReservaPageState();
@@ -13,6 +19,17 @@ class ReservaPage extends StatefulWidget {
 class _ReservaPageState extends State<ReservaPage> {
   DateTime? _selectedDate;
   String? _selectedTime;
+  List<String> _horariosReservados = [];
+  int? _hoveredIndex;
+
+  // Colores del tema
+  final Color _colorPrimario = Color(0xFF0D47A1); // Azul
+  final Color _colorSecundario = Color(0xFFFF6F00); // Naranja
+  final Color _colorHorarioDisponible = Colors.green;
+  final Color _colorHorarioSeleccionado = Colors.transparent;
+  final Color _colorBordeSeleccionado = Colors.green;
+  final Color _colorHorarioReservado = Colors.red;
+  final Color _colorHover = Colors.green.withOpacity(0.7);
 
   final List<String> _horarios = [
     '8:00-9:00 AM',
@@ -30,12 +47,19 @@ class _ReservaPageState extends State<ReservaPage> {
     '8:00-9:00 PM',
   ];
 
+  String _getPrecioNumerico() {
+    final precio = widget.cancha['precio'].toString();
+    return precio.replaceAll(RegExp(r'[^0-9.]'), '');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final precioNumerico = _getPrecioNumerico();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reservar ${widget.cancha['nombre']}'),
-        backgroundColor: const Color(0xFFD4534E),
+        title: Text(widget.complejo['nombre'] ?? 'Reserva'),
+        backgroundColor: _colorPrimario,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -44,30 +68,62 @@ class _ReservaPageState extends State<ReservaPage> {
           children: [
             // Información de la cancha
             Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Cancha "${widget.cancha['nombre']}"',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.sports_soccer, color: _colorSecundario, size: 28), // Ícono de balón
+                          const SizedBox(width: 8),
+                          Text(
+                            widget.cancha['nombre'],
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: _colorPrimario,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text('Jugadores: ${widget.cancha['jugadores']}'),
-                    const SizedBox(height: 8),
-                    Text('Precio: ${widget.cancha['precio']}'),
+                    const SizedBox(height: 16),
+                    
+                    Row(
+                      children: [
+                        Icon(Icons.people, color: _colorSecundario),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Jugadores: ${widget.cancha['jugadores']}',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    
+                    Row(
+                      children: [
+                        Icon(Icons.attach_money, color: _colorSecundario),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Precio hora: L $precioNumerico',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
-
             const SizedBox(height: 24),
 
-            // Selector de fecha (opcional)
             const Text(
               'Selecciona una fecha:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -84,7 +140,7 @@ class _ReservaPageState extends State<ReservaPage> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.calendar_today),
+                    Icon(Icons.calendar_today, color: _colorPrimario),
                     const SizedBox(width: 10),
                     Text(
                       _selectedDate == null
@@ -95,16 +151,13 @@ class _ReservaPageState extends State<ReservaPage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 24),
 
-            // Horarios disponibles (siempre visibles)
             const Text(
               'Horarios disponibles:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -118,23 +171,49 @@ class _ReservaPageState extends State<ReservaPage> {
               itemBuilder: (context, index) {
                 final horario = _horarios[index];
                 final isSelected = _selectedTime == horario;
+                final isReserved = _horariosReservados.any(
+                  (h) => h.trim().toLowerCase() == horario.trim().toLowerCase(),
+                );
+                final isHovered = _hoveredIndex == index && !isReserved && !isSelected;
 
-                return GestureDetector(
-                  onTap: () => setState(() => _selectedTime = horario),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected ? Colors.transparent : Colors.green,
-                      borderRadius: BorderRadius.circular(8),
-                      border: isSelected
-                          ? Border.all(color: Colors.green, width: 2)
-                          : null,
-                    ),
-                    child: Center(
-                      child: Text(
-                        horario,
-                        style: TextStyle(
-                          color: isSelected ? Colors.black : Colors.white,
-                          fontWeight: FontWeight.bold,
+                return MouseRegion(
+                  onEnter: (event) => setState(() => _hoveredIndex = index),
+                  onExit: (event) => setState(() => _hoveredIndex = null),
+                  child: GestureDetector(
+                    onTap: isReserved
+                        ? null
+                        : () => setState(() => _selectedTime = horario),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      decoration: BoxDecoration(
+                        color: isReserved
+                            ? _colorHorarioReservado
+                            : isSelected
+                                ? _colorHorarioSeleccionado
+                                : isHovered
+                                    ? _colorHover
+                                    : _colorHorarioDisponible,
+                        borderRadius: BorderRadius.circular(8),
+                        border: isSelected
+                            ? Border.all(color: _colorBordeSeleccionado, width: 2)
+                            : null,
+                        boxShadow: isHovered
+                            ? [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                )
+                              ]
+                            : null,
+                      ),
+                      child: Center(
+                        child: Text(
+                          horario,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -142,22 +221,27 @@ class _ReservaPageState extends State<ReservaPage> {
                 );
               },
             ),
-
             const Spacer(),
 
-            // Botón Continuar
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD4534E),
+                  backgroundColor: _colorSecundario,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 onPressed: _validateAndContinue,
-                child: const Text('CONTINUAR', style: TextStyle(fontSize: 16)),
+                child: const Text(
+                  'RESERVAR',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
@@ -178,16 +262,58 @@ class _ReservaPageState extends State<ReservaPage> {
       setState(() {
         _selectedDate = date;
       });
+      await _cargarHorariosReservados();
+    }
+  }
+
+  Future<void> _cargarHorariosReservados() async {
+    if (_selectedDate == null) return;
+
+    final firestore = FirebaseFirestore.instance;
+
+    try {
+      final String canchaNombre = widget.cancha['nombre'];
+      final String complejoNombre = widget.complejo['nombre'];
+      final String fechaString = _selectedDate!.toIso8601String().split('T').first;
+
+      final querySnapshot = await firestore
+          .collection('reservas')
+          .where('canchaNombre', isEqualTo: canchaNombre)
+          .where('complejoNombre', isEqualTo: complejoNombre)
+          .where('fecha', isEqualTo: fechaString)
+          .get();
+
+      final horariosReservados = querySnapshot.docs
+          .map((doc) => (doc['horario'] as String).trim())
+          .toList();
+
+      setState(() {
+        _horariosReservados = horariosReservados;
+        _selectedTime = null;
+      });
+
+    } catch (e) {
+      print('Error al cargar horarios reservados: $e');
+      setState(() {
+        _horariosReservados = [];
+      });
     }
   }
 
   String _formatDate(DateTime date) {
     final days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-    final months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    final months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     return '${days[date.weekday % 7]}, ${date.day} ${months[date.month - 1]}';
   }
 
   void _validateAndContinue() {
+    if (_selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor selecciona una fecha')),
+      );
+      return;
+    }
+
     if (_selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor selecciona un horario')),
@@ -195,17 +321,28 @@ class _ReservaPageState extends State<ReservaPage> {
       return;
     }
 
-    final fechaFinal = _selectedDate ?? DateTime.now();
+    final isReserved = _horariosReservados.any(
+      (h) => h.trim().toLowerCase() == _selectedTime!.trim().toLowerCase(),
+    );
+    if (isReserved) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('El horario seleccionado ya está reservado')),
+      );
+      return;
+    }
+
+    final precioNumerico = _getPrecioNumerico();
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ConfirmacionReservaPage(
           cancha: widget.cancha,
-          fecha: fechaFinal,
+          complejo: widget.complejo,
+          fecha: _selectedDate!,
           horario: _selectedTime!,
-          precio: widget.cancha['precio'].toString().split(' ')[0],
-        )
+          precio: 'L $precioNumerico',
+        ),
       ),
     );
   }

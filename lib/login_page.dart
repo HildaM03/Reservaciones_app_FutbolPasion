@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:resrevacion_canchas/Camplejospage.dart';
+import 'package:resrevacion_canchas/home_navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:resrevacion_canchas/register.dart';
 
@@ -24,10 +24,11 @@ class _LoginPageState extends State<LoginPage> {
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
-  final Color azulClaro = Color(0xFF90CAF9);
-  final Color azulOscuro = Color(0xFF0D47A1);
-  final Color blanco = Color(0xFFFFFFFF);
-  final Color gris = Color(0xFF9E9E9E);
+  // Colores azul y naranja con texto blanco
+  final Color azulElectrico = Color(0xFF0D47A1);
+  final Color naranjaFuerte = Color(0xFFFF6F00);
+  final Color blanco = Colors.white;
+  final Color grisClaro = Colors.grey.shade300;
 
   bool _loading = false;
   bool _obscurePassword = true;
@@ -36,14 +37,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    
     if (widget.initialEmail != null) {
       emailCtrl.text = widget.initialEmail!;
     }
     if (widget.initialPassword != null) {
       passCtrl.text = widget.initialPassword!;
     }
-    
     _loadSavedCredentials();
   }
 
@@ -82,24 +81,21 @@ class _LoginPageState extends State<LoginPage> {
         password: passCtrl.text.trim(),
       );
       await _saveCredentials();
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('✔️ Sesión iniciada correctamente'),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.black,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           duration: Duration(seconds: 3),
         ),
       );
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ComplejosPage()),
+        MaterialPageRoute(builder: (context) => HomeNavigation()),
       );
-
     } on FirebaseAuthException catch (e) {
       String message = '¿Primera Vez?, Por favor Registrarse';
       if (e.code == 'user-not-found') {
@@ -109,15 +105,13 @@ class _LoginPageState extends State<LoginPage> {
       } else if (e.code == 'invalid-email') {
         message = 'Correo electrónico inválido';
       }
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
-          backgroundColor: Colors.redAccent,
+          backgroundColor: Colors.black,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           duration: Duration(seconds: 3),
         ),
       );
@@ -134,11 +128,9 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ingrese su correo para recuperar contraseña'),
-          backgroundColor: Colors.redAccent,
+          backgroundColor: Colors.black,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           duration: Duration(seconds: 3),
         ),
       );
@@ -150,11 +142,9 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Correo de recuperación enviado a $email'),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.black,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           duration: Duration(seconds: 3),
         ),
       );
@@ -162,11 +152,9 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.message}'),
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           duration: Duration(seconds: 3),
         ),
       );
@@ -176,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: azulClaro.withOpacity(0.15),
+      backgroundColor: azulElectrico,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -186,46 +174,37 @@ class _LoginPageState extends State<LoginPage> {
               child: Form(
                 key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 40),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: azulClaro, width: 3),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Image.network(
-                          'https://img.freepik.com/vector-premium/calendario-deportivo-futbol-bola-pie-realista_41737-5.jpg?w=2000',
-                          height: 120,
-                          fit: BoxFit.cover,
-                        ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.network(
+                        'https://cdn-icons-png.flaticon.com/512/709/709722.png',
+                        height: 120,
+                        fit: BoxFit.contain,
                       ),
                     ),
-
                     const SizedBox(height: 20),
                     Text(
                       'Fútbol Pasión',
                       style: TextStyle(
-                        color: azulOscuro,
+                        color: naranjaFuerte,
                         fontWeight: FontWeight.bold,
-                        fontSize: 24,
+                        fontSize: 28,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 4,
+                            color: Colors.black45,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 32),
-
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: blanco.withOpacity(0.95),
+                        color: blanco,
                         borderRadius: BorderRadius.circular(28),
                         boxShadow: [
                           BoxShadow(
@@ -236,7 +215,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       child: Column(
-                        mainAxisSize: MainAxisSize.min,
                         children: [
                           TextFormField(
                             controller: emailCtrl,
@@ -251,22 +229,19 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             decoration: InputDecoration(
                               labelText: 'Correo electrónico',
-                              prefixIcon: Icon(Icons.email, color: azulOscuro),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                              prefixIcon: Icon(Icons.email, color: azulElectrico),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulOscuro),
+                                borderSide: BorderSide(color: azulElectrico),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: gris),
+                                borderSide: BorderSide(color: grisClaro),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                           ),
                           const SizedBox(height: 16),
-
                           TextFormField(
                             controller: passCtrl,
                             obscureText: _obscurePassword,
@@ -281,11 +256,11 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             decoration: InputDecoration(
                               labelText: 'Contraseña',
-                              prefixIcon: Icon(Icons.lock, color: azulOscuro),
+                              prefixIcon: Icon(Icons.lock, color: azulElectrico),
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                                  color: azulOscuro,
+                                  color: azulElectrico,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -293,20 +268,17 @@ class _LoginPageState extends State<LoginPage> {
                                   });
                                 },
                               ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulOscuro),
+                                borderSide: BorderSide(color: azulElectrico),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: gris),
+                                borderSide: BorderSide(color: grisClaro),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -316,11 +288,9 @@ class _LoginPageState extends State<LoginPage> {
                                   Checkbox(
                                     value: _rememberMe,
                                     onChanged: (value) {
-                                      setState(() {
-                                        _rememberMe = value ?? false;
-                                      });
+                                      setState(() => _rememberMe = value ?? false);
                                     },
-                                    activeColor: azulOscuro,
+                                    activeColor: naranjaFuerte,
                                   ),
                                   Text('Recordarme', style: TextStyle(color: Colors.black87)),
                                 ],
@@ -330,42 +300,40 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Text(
                                   '¿Olvidó su contraseña?',
                                   style: TextStyle(
-                                    color: azulOscuro,
+                                    color: naranjaFuerte,
                                     decoration: TextDecoration.underline,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 16),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: _loading ? null : login,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: azulOscuro,
+                                backgroundColor: naranjaFuerte,
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
                               child: _loading
-                                  ? CircularProgressIndicator(color: Colors.white)
+                                  ? CircularProgressIndicator(color: blanco)
                                   : Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Icon(Icons.login, color: Colors.white),
+                                        Icon(Icons.login, color: blanco),
                                         SizedBox(width: 10),
                                         Text(
                                           'Iniciar sesión',
-                                          style: TextStyle(fontSize: 18, color: Colors.white),
+                                          style: TextStyle(fontSize: 18, color: blanco),
                                         ),
                                       ],
                                     ),
                             ),
                           ),
-
                           const SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -381,7 +349,7 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Text(
                                   'Regístrate',
                                   style: TextStyle(
-                                    color: azulOscuro,
+                                    color: naranjaFuerte,
                                     fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline,
                                   ),

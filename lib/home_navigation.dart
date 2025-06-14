@@ -35,7 +35,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
         onTap: _onTabTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Reservas'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Mis Reservas'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),

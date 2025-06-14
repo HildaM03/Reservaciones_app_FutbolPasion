@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:resrevacion_canchas/detalle_complejo_page.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'login_page.dart';
 
 class ComplejosPage extends StatelessWidget {
   final List<Map<String, dynamic>> complejos = [
@@ -13,7 +11,7 @@ class ComplejosPage extends StatelessWidget {
           '1ra Avenida, entre 10 y 12 Calle N.O., Barrio Las Acacias, San Pedro Sula, Honduras',
       'coordenadas': '15.514816582124888,-88.02116407116452',
       'imagen':
-          'https://scontent.fsap12-1.fna.fbcdn.net/v/t39.30808-6/489787440_29434847472795932_8830267978180362267_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=84TOmkkYH2MQ7kNvwEnv9ab&_nc_oc=Adl_yXRdAZmuTa1hfGpHQOLvr7XE_UlDVqVKvuwsWLjYCFEC-FnT2pyJEqjetZM7kDY&_nc_zt=23&_nc_ht=scontent.fsap12-1.fna&_nc_gid=ITma64kwvAA_kIQb5rV7pQ&oh=00_AfPEiZmEuU_9MCCY84_1KZMe0KPIGRYo39Yn4K4EompMOg&oe=6851BB05',
+          'https://scontent.fsap12-1.fna.fbcdn.net/v/t39.30808-6/322876158_554170996568371_4651767928234651329_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=KideQaJevYAQ7kNvwEM8B1c&_nc_oc=AdnNq9_Uos5QNDnKJ8IzselBSwi50CGWFMnpCRI4XtiRHUH9UpqdT5_HC6Ex0SXXWTs&_nc_zt=23&_nc_ht=scontent.fsap12-1.fna&_nc_gid=FjOaCrR6HMz2pOCwoMfcwg&oh=00_AfNU2J_TLzTo0TG01qYcny8g1gUffOD1GC1ayVSXYi-ExA&oe=685295D0',
       'canchas': [
         {'nombre': 'Cancha 1', 'jugadores': '8 vs 8', 'precio': '800 Lps / hora'},
         {'nombre': 'Cancha 2', 'jugadores': '8 vs 8', 'precio': '800 Lps / hora'},
@@ -32,8 +30,7 @@ class ComplejosPage extends StatelessWidget {
       'telefono': '8768-5305',
       'ubicacion': 'Sector Palenque, San Pedro Sula, Honduras',
       'coordenadas': '15.54221, -88.02114',
-      'imagen':
-          'https://scontent.fsap12-1.fna.fbcdn.net/v/t39.30808-6/305297731_519801253481214_1238331527813895484_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=EJV62XQqcyEQ7kNvwGL92hn&_nc_oc=AdkRTFWIhQzbjtNSA8K4RlMEHwptrjckunO0wZVf8egjjLBwnVt0-uRwS-nMEj7_Qeo&_nc_zt=23&_nc_ht=scontent.fsap12-1.fna&_nc_gid=YvNkOWvrNeasPgjyvoO4Kw&oh=00_AfOe5v6sGm4KOyClp3mP9c1UWir3sqWYR76JGZagXL1fRA&oe=6851F938',
+      'imagen': 'https://graph.facebook.com/1240228296026868/picture?type=large',
       'canchas': [
         {'nombre': 'Cancha 1', 'jugadores': '7 vs 7', 'precio': '700 Lps / hora'},
         {'nombre': 'Cancha 2', 'jugadores': '7 vs 7', 'precio': '700 Lps / hora'},
@@ -41,12 +38,11 @@ class ComplejosPage extends StatelessWidget {
       ]
     },
     {
-      'nombre': 'Canchas De Futbol Taki Take',
+      'nombre': 'Canchas De Futbol Taki Take Sports',
       'telefono': '9794-9697',
       'ubicacion': 'San Pedro Sula, Honduras',
       'coordenadas': '15.53668,-88.01277',
-      'imagen':
-          'https://itin-dev.wanderlogstatic.com/freeImage/a2jWybcfz94as8jFxRPosyiKnYOAOFFs',
+      'imagen': 'https://lh3.googleusercontent.com/gps-cs-s/AC9h4novAzBFrEcJdnW-MouOeIEaOZpriBxYbUp66FwzP0l5c70G8zekzO6-neIKbNdbe6uppVJMNaBDvhGgSWqn0QpZmZd_rjEcsCIgrWVorSd0K0In-2R-v2wha7w-Ppt7KgxLlHx4=w426-h240-k-no',
       'canchas': [
         {'nombre': 'Cancha 1', 'jugadores': '5 vs 5', 'precio': '450 Lps / hora'},
         {'nombre': 'Cancha 2', 'jugadores': '5 vs 5', 'precio': '450 Lps / hora'},
@@ -57,8 +53,7 @@ class ComplejosPage extends StatelessWidget {
       'telefono': 'N/A',
       'ubicacion': '14 Avenida NO, San Pedro Sula, Cortes',
       'coordenadas': '15.51178,-88.03444',
-      'imagen':
-          'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=500&auto=format&fit=crop&q=60',
+      'imagen': 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=500',
       'canchas': [
         {'nombre': 'Cancha 1', 'jugadores': '6 vs 6', 'precio': '600 Lps / hora'},
       ]
@@ -68,8 +63,7 @@ class ComplejosPage extends StatelessWidget {
       'telefono': '+504 9923-4324',
       'ubicacion': '21 Avenida NO, San Pedro Sula 21102, Honduras',
       'coordenadas': '15.51819, -88.03705',
-      'imagen':
-          'https://th.bing.com/th/id/OIP.AWKFogBT8gEjfjxK_gWskQHaEK?r=0&rs=1&pid=ImgDetMain',
+      'imagen': 'https://th.bing.com/th/id/OIP.AWKFogBT8gEjfjxK_gWskQHaEK',
       'canchas': [
         {'nombre': 'Cancha 1', 'jugadores': '5 vs 5', 'precio': '500 Lps / hora'},
         {'nombre': 'Cancha 2', 'jugadores': '5 vs 5', 'precio': '500 Lps / hora'},
@@ -81,8 +75,7 @@ class ComplejosPage extends StatelessWidget {
       'telefono': 'N/A',
       'ubicacion': 'GX93+CW2, C. Juan Lindo, San Pedro Sula 21102, Honduras',
       'coordenadas': '15.51876, -88.04524',
-      'imagen':
-          'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=500&auto=format&fit=crop&q=60',
+      'imagen': 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=500',
       'canchas': [
         {'nombre': 'Cancha 1', 'jugadores': '8 vs 8', 'precio': '800 Lps / hora'},
         {'nombre': 'Cancha 2', 'jugadores': '7 vs 7', 'precio': '700 Lps / hora'},
@@ -93,8 +86,7 @@ class ComplejosPage extends StatelessWidget {
       'telefono': 'N/A',
       'ubicacion': '13 Calle SO, San Pedro Sula, Cortes',
       'coordenadas': '15.49412,-88.02863',
-      'imagen':
-          'https://www.europlan-online.de/files/3683b231b7f900ad91c0bfb97389289e.jpg',
+      'imagen': 'https://http2.mlstatic.com/D_NQ_NP_291905-MLM25083015044_102016-V.jpg',
       'canchas': [
         {'nombre': 'Cancha 1', 'jugadores': '8 vs 8', 'precio': '800 Lps / hora'},
         {'nombre': 'Cancha 2', 'jugadores': '6 vs 6', 'precio': '600 Lps / hora'},
@@ -115,20 +107,12 @@ class ComplejosPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Complejos Deportivos'),
-        backgroundColor: Color(0xFF1565C0), // Azul fuerte
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            },
-          )
-        ],
+        title: const Text(
+          'Complejos Deportivos',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Color(0xFF1565C0),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(8),
@@ -172,10 +156,10 @@ class ComplejosPage extends StatelessWidget {
                       children: [
                         Text(
                           complejo['nombre'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFFF6F00), // Naranja vibrante
+                            color: Color(0xFFFF6F00),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -184,8 +168,7 @@ class ComplejosPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text('Ubicación:',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
+                                  style: TextStyle(fontWeight: FontWeight.bold)),
                               const SizedBox(height: 4),
                               Text(complejo['ubicacion'],
                                   style: const TextStyle(fontSize: 14)),
@@ -198,8 +181,9 @@ class ComplejosPage extends StatelessWidget {
                             child: const Text(
                               'Ver en Google Maps',
                               style: TextStyle(
-                                  color: Color(0xFF1565C0),
-                                  decoration: TextDecoration.underline),
+                                color: Color(0xFF1565C0),
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         const SizedBox(height: 12),

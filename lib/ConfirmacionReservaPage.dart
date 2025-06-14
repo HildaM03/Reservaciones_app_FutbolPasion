@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:resrevacion_canchas/Reserva_exitosa_page.dart';
 
-class ConfirmacionReservaPage extends StatelessWidget {
+class ConfirmacionReservaPage extends StatefulWidget {
   final Map<String, dynamic> cancha;
   final Map<String, dynamic> complejo;
   final DateTime fecha;
@@ -20,238 +20,158 @@ class ConfirmacionReservaPage extends StatelessWidget {
   });
 
   @override
+  State<ConfirmacionReservaPage> createState() => _ConfirmacionReservaPageState();
+}
+
+class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
+  static const Color mainColor = Color(0xFF26A69A); // Verde jade
+  static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color lightBackground = Color(0xFFFAFAFA);
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: lightBackground,
       appBar: AppBar(
-        title: const Text('Confirmar Reserva'),
-        backgroundColor: const Color(0xFFD4534E),
+        title: Text(widget.complejo['nombre']),
+        backgroundColor: mainColor,
+        foregroundColor: Colors.white,
+        elevation: 2,
       ),
-      body: Container(
-        color: Colors.grey[100],
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Recuadro de información de la cancha
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.only(bottom: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Center(
-                    child: Text(
-                      'Confirma la información de tu reserva',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFD4534E),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildInfoRow('Complejo', complejo['nombre']),
-                  const SizedBox(height: 12),
-                  _buildInfoRow('Cancha', '"${cancha['nombre']}"'),
-                  const SizedBox(height: 12),
-                  _buildInfoRow('Jugadores', cancha['jugadores']),
-                  const SizedBox(height: 12),
-                  _buildInfoRow('Precio hora', 'L. $precio'),
-                ],
-              ),
-            ),
-
-            // Recuadro de fecha y horario
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.only(bottom: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Fecha seleccionada:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFD4534E),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _formatDate(fecha),
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Horario seleccionado:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFD4534E),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    horario,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-
-            // Recuadro del total
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.only(bottom: 16),
-              child: Row(
+            _buildSectionTitle('📝 Confirma la informacionn de la Reserva'),
+            _buildCard([
+              _infoRow(Icons.location_city, 'Complejo', widget.complejo['nombre']),
+              _infoRow(Icons.sports_soccer, 'Cancha', widget.cancha['nombre']),
+              _infoRow(Icons.group, 'Jugadores', widget.cancha['jugadores']),
+              _infoRow(Icons.attach_money, 'Precio por hora', widget.precio),
+            ]),
+            const SizedBox(height: 10),
+            _buildSectionTitle('📅 Fecha y Horario'),
+            _buildCard([
+              _infoRow(Icons.calendar_today, 'Fecha', _formatDate(widget.fecha)),
+              _infoRow(Icons.access_time, 'Horario', widget.horario),
+            ]),
+            const SizedBox(height: 10),
+            _buildSectionTitle('💵 Total a Pagar'),
+            _buildCard([
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Total a pagar:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Color(0xFFD4534E),
-                    ),
+                    'Total:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: mainColor),
                   ),
                   Text(
-                    'L. $precio',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
+                    widget.precio,
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: mainColor),
                   ),
                 ],
-              ),
-            ),
-
-            const Spacer(),
-
-            // Botones
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: const BorderSide(color: Color(0xFFD4534E)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text(
-                        'REGRESAR',
-                        style: TextStyle(
-                          color: Color(0xFFD4534E),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD4534E),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () => _confirmReservation(context),
-                      child: const Text(
-                        'CONFIRMAR',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              )
+            ]),
+            const SizedBox(height: 30),
+            _buildActionButtons(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildSectionTitle(String title) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: mainColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard(List<Widget> children) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardBackground,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
+    );
+  }
+
+  Widget _infoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Row(
+        children: [
+          Icon(icon, color: mainColor),
+          const SizedBox(width: 10),
+          Text(
+            '$label: ',
+            style: const TextStyle(fontWeight: FontWeight.bold, color: mainColor),
+          ),
+          Expanded(
+            child: Text(value, style: const TextStyle(fontSize: 16)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
     return Row(
       children: [
-        Text(
-          '$label: ',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFD4534E),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back, color: mainColor),
+            label: const Text('REGRESAR', style: TextStyle(color: mainColor)),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              side: const BorderSide(color: mainColor),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
           ),
         ),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 16),
+        const SizedBox(width: 16),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: _isLoading ? null : () => _confirmReservation(context),
+            icon: _isLoading
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  )
+                : const Icon(Icons.check_circle, color: Colors.white),
+            label: Text(
+              _isLoading ? 'CONFIRMANDO...' : 'CONFIRMAR',
+              style: const TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: mainColor,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
         ),
       ],
     );
@@ -264,38 +184,31 @@ class ConfirmacionReservaPage extends StatelessWidget {
   }
 
   Future<void> _confirmReservation(BuildContext context) async {
+    setState(() => _isLoading = true);
+
     try {
       final user = FirebaseAuth.instance.currentUser;
-
       if (user == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Debes iniciar sesión para confirmar una reserva.'),
-            backgroundColor: Colors.red,
-          ),
+          const SnackBar(content: Text('Debes iniciar sesión para confirmar una reserva.'), backgroundColor: Colors.red),
         );
         return;
       }
 
-      // Verificar si ya existe una reserva para la misma cancha, fecha y horario
       final query = await FirebaseFirestore.instance
           .collection('reservas')
-          .where('cancha', isEqualTo: cancha['nombre'])
-          .where('fecha', isEqualTo: fecha.toIso8601String())
-          .where('horario', isEqualTo: horario)
+          .where('cancha', isEqualTo: widget.cancha['nombre'])
+          .where('fecha', isEqualTo: widget.fecha.toIso8601String())
+          .where('horario', isEqualTo: widget.horario)
           .get();
 
       if (query.docs.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Esta cancha ya ha sido reservada en este horario.'),
-            backgroundColor: Colors.redAccent,
-          ),
+          const SnackBar(content: Text('Esta cancha ya ha sido reservada en este horario.'), backgroundColor: Colors.redAccent),
         );
         return;
       }
 
-      // Obtener nombre desde Firestore
       String nombreCompleto = user.displayName ?? 'Sin nombre';
       final userDoc = await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).get();
       if (userDoc.exists) {
@@ -303,36 +216,36 @@ class ConfirmacionReservaPage extends StatelessWidget {
       }
 
       final reserva = {
-        'complejo': complejo['nombre'],
-        'cancha': cancha['nombre'],
-        'jugadores': cancha['jugadores'],
-        'precio': 'L. $precio',
-        'fecha': fecha.toIso8601String(),
-        'horario': horario,
+        'complejo': widget.complejo['nombre'],
+        'cancha': widget.cancha['nombre'],
+        'jugadores': widget.cancha['jugadores'],
+        'precio': widget.precio,
+        'fecha': widget.fecha.toIso8601String(),
+        'horario': widget.horario,
         'nombre': nombreCompleto,
         'correo': user.email,
         'timestamp': FieldValue.serverTimestamp(),
-        'complejoTelefono': complejo['telefono'],
-        'complejoUbicacion': complejo['ubicacion'],
+        'complejoTelefono': widget.complejo['telefono'],
+        'complejoUbicacion': widget.complejo['ubicacion'],
       };
 
       await FirebaseFirestore.instance.collection('reservas').add(reserva);
 
-      // Navegar a la pantalla de confirmación exitosa
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => ReservaExitosaPage(reserva: reserva),
+          builder: (_) => ReservaExitosaPage(reserva: reserva),
         ),
       );
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al confirmar reserva: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Error al confirmar reserva: $e'), backgroundColor: Colors.red),
       );
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
-} 
+}

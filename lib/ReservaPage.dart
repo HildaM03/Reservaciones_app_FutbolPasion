@@ -22,9 +22,8 @@ class _ReservaPageState extends State<ReservaPage> {
   List<String> _horariosReservados = [];
   int? _hoveredIndex;
 
-  // Colores del tema
-  final Color _colorPrimario = Color(0xFF0D47A1); // Azul
-  final Color _colorSecundario = Color(0xFFFF6F00); // Naranja
+  final Color _colorPrimario = Color(0xFF0D47A1);
+  final Color _colorSecundario = Color(0xFFFF6F00);
   final Color _colorHorarioDisponible = Colors.green;
   final Color _colorHorarioSeleccionado = Colors.transparent;
   final Color _colorBordeSeleccionado = Colors.green;
@@ -61,27 +60,25 @@ class _ReservaPageState extends State<ReservaPage> {
         title: Text(widget.complejo['nombre'] ?? 'Reserva'),
         backgroundColor: _colorPrimario,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Información de la cancha
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Row(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.sports_soccer, color: _colorSecundario, size: 28), // Ícono de balón
+                          Icon(Icons.sports_soccer, color: _colorSecundario, size: 28),
                           const SizedBox(width: 8),
                           Text(
                             widget.cancha['nombre'],
@@ -93,158 +90,154 @@ class _ReservaPageState extends State<ReservaPage> {
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    Row(
-                      children: [
-                        Icon(Icons.people, color: _colorSecundario),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Jugadores: ${widget.cancha['jugadores']}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    
-                    Row(
-                      children: [
-                        Icon(Icons.attach_money, color: _colorSecundario),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Precio hora: L $precioNumerico',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            const Text(
-              'Selecciona una fecha:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            InkWell(
-              onTap: _pickDate,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.calendar_today, color: _colorPrimario),
-                    const SizedBox(width: 10),
-                    Text(
-                      _selectedDate == null
-                          ? 'Seleccionar Fecha'
-                          : _formatDate(_selectedDate!),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            const Text(
-              'Horarios disponibles:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
-              itemCount: _horarios.length,
-              itemBuilder: (context, index) {
-                final horario = _horarios[index];
-                final isSelected = _selectedTime == horario;
-                final isReserved = _horariosReservados.any(
-                  (h) => h.trim().toLowerCase() == horario.trim().toLowerCase(),
-                );
-                final isHovered = _hoveredIndex == index && !isReserved && !isSelected;
-
-                return MouseRegion(
-                  onEnter: (event) => setState(() => _hoveredIndex = index),
-                  onExit: (event) => setState(() => _hoveredIndex = null),
-                  child: GestureDetector(
-                    onTap: isReserved
-                        ? null
-                        : () => setState(() => _selectedTime = horario),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      decoration: BoxDecoration(
-                        color: isReserved
-                            ? _colorHorarioReservado
-                            : isSelected
-                                ? _colorHorarioSeleccionado
-                                : isHovered
-                                    ? _colorHover
-                                    : _colorHorarioDisponible,
-                        borderRadius: BorderRadius.circular(8),
-                        border: isSelected
-                            ? Border.all(color: _colorBordeSeleccionado, width: 2)
-                            : null,
-                        boxShadow: isHovered
-                            ? [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                )
-                              ]
-                            : null,
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Icon(Icons.people, color: _colorSecundario),
+                          const SizedBox(width: 8),
+                          Text('Jugadores: ${widget.cancha['jugadores']}'),
+                        ],
                       ),
-                      child: Center(
-                        child: Text(
-                          horario,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Icon(Icons.attach_money, color: _colorSecundario),
+                          const SizedBox(width: 8),
+                          Text('Precio hora: L $precioNumerico'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Selecciona una fecha:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: _pickDate,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.calendar_today, color: _colorPrimario),
+                      const SizedBox(width: 10),
+                      Text(
+                        _selectedDate == null
+                            ? 'Seleccionar Fecha'
+                            : _formatDate(_selectedDate!),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Horarios disponibles:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 2,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                itemCount: _horarios.length,
+                itemBuilder: (context, index) {
+                  final horario = _horarios[index];
+                  final isSelected = _selectedTime == horario;
+                  final isReserved = _horariosReservados.any(
+                    (h) => h.trim().toLowerCase() == horario.trim().toLowerCase(),
+                  );
+                  final isHovered = _hoveredIndex == index && !isReserved && !isSelected;
+
+                  return MouseRegion(
+                    onEnter: (event) {
+                      if (!isReserved) setState(() => _hoveredIndex = index);
+                    },
+                    onExit: (event) {
+                      if (!isReserved) setState(() => _hoveredIndex = null);
+                    },
+                    child: GestureDetector(
+                      onTap: isReserved
+                          ? null
+                          : () => setState(() => _selectedTime = horario),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        decoration: BoxDecoration(
+                          color: isReserved
+                              ? _colorHorarioReservado
+                              : isSelected
+                                  ? _colorHorarioSeleccionado
+                                  : isHovered
+                                      ? _colorHover
+                                      : _colorHorarioDisponible,
+                          borderRadius: BorderRadius.circular(8),
+                          border: isSelected
+                              ? Border.all(color: _colorBordeSeleccionado, width: 2)
+                              : null,
+                          boxShadow: isHovered
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  )
+                                ]
+                              : null,
+                        ),
+                        child: Center(
+                          child: Text(
+                            horario,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              decoration: isReserved
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
                           ),
                         ),
                       ),
                     ),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _colorSecundario,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                );
-              },
-            ),
-            const Spacer(),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _colorSecundario,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                onPressed: _validateAndContinue,
-                child: const Text(
-                  'RESERVAR',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                  onPressed: _validateAndContinue,
+                  child: const Text(
+                    'RESERVAR',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:resrevacion_canchas/mis_reservas_screen.dart';
-import 'login_page.dart'; // Para cerrar sesión
+import 'login_users_page.dart'; // Para cerrar sesión
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -79,7 +79,7 @@ class ProfilePage extends StatelessWidget {
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  MaterialPageRoute(builder: (context) => const LoginUsersPage()),
                 );
               },
               child: const Text('Cerrar sesión', style: TextStyle(color: Colors.white)),

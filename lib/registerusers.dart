@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'login_page.dart';
+import 'login_users_page.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class RegisterUsersPage extends StatefulWidget {
+  const RegisterUsersPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<RegisterUsersPage> createState() => _RegisterUsersPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterUsersPageState extends State<RegisterUsersPage> {
   final fullNameCtrl = TextEditingController();
   final idNumberCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
@@ -60,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => LoginUsersPage()),
       );
     } on FirebaseAuthException catch (e) {
       showMessage('Error: ${e.message}');
@@ -98,7 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Registro',
+                  'Registro de Usuario',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,

@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:resrevacion_canchas/home_navigation.dart';
+import 'package:resrevacion_canchas/registerusers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:resrevacion_canchas/register.dart';
 
-class LoginPage extends StatefulWidget {
+
+class LoginUsersPage extends StatefulWidget {
   final String? initialEmail;
   final String? initialPassword;
 
-  const LoginPage({
+  const LoginUsersPage({
     super.key,
     this.initialEmail,
     this.initialPassword,
   });
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginUsersPage> createState() => _LoginUsersPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginUsersPageState extends State<LoginUsersPage> {
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
-  // Colores azul y naranja con texto blanco
   final Color azulElectrico = Color(0xFF0D47A1);
   final Color naranjaFuerte = Color(0xFFFF6F00);
   final Color blanco = Colors.white;
@@ -343,7 +343,7 @@ class _LoginPageState extends State<LoginPage> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const RegisterPage()),
+                                    MaterialPageRoute(builder: (context) => const RegisterUsersPage()),
                                   );
                                 },
                                 child: Text(

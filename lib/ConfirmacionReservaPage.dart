@@ -24,9 +24,10 @@ class ConfirmacionReservaPage extends StatefulWidget {
 }
 
 class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
-  static const Color mainColor = Color(0xFF26A69A); // Verde jade
+  static const Color mainBlue = Color(0xFF1565C0);
+  static const Color accentOrange = Color(0xFFFF6F00);
   static const Color cardBackground = Color(0xFFFFFFFF);
-  static const Color lightBackground = Color(0xFFFAFAFA);
+  static const Color lightBackground = Color(0xFFF5F9FF);
   bool _isLoading = false;
 
   @override
@@ -35,7 +36,7 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
       backgroundColor: lightBackground,
       appBar: AppBar(
         title: Text(widget.complejo['nombre']),
-        backgroundColor: mainColor,
+        backgroundColor: mainBlue,
         foregroundColor: Colors.white,
         elevation: 2,
       ),
@@ -43,7 +44,7 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildSectionTitle('📝 Confirma la informacionn de la Reserva'),
+            _buildSectionTitle('📝 Confirma la información de la Reserva'),
             _buildCard([
               _infoRow(Icons.location_city, 'Complejo', widget.complejo['nombre']),
               _infoRow(Icons.sports_soccer, 'Cancha', widget.cancha['nombre']),
@@ -62,14 +63,10 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Total:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: mainColor),
-                  ),
-                  Text(
-                    widget.precio,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: mainColor),
-                  ),
+                  Text('Total:',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: mainBlue)),
+                  Text(widget.precio,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: accentOrange)),
                 ],
               )
             ]),
@@ -86,10 +83,10 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
       alignment: Alignment.centerLeft,
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: mainColor,
+          color: mainBlue,
         ),
       ),
     );
@@ -104,7 +101,7 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.15),
+            color: mainBlue.withOpacity(0.15),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -122,11 +119,11 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Row(
         children: [
-          Icon(icon, color: mainColor),
+          Icon(icon, color: accentOrange),
           const SizedBox(width: 10),
           Text(
             '$label: ',
-            style: const TextStyle(fontWeight: FontWeight.bold, color: mainColor),
+            style: TextStyle(fontWeight: FontWeight.bold, color: mainBlue),
           ),
           Expanded(
             child: Text(value, style: const TextStyle(fontSize: 16)),
@@ -140,13 +137,13 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
     return Row(
       children: [
         Expanded(
-          child: OutlinedButton.icon(
+          child: ElevatedButton.icon( // Changed from OutlinedButton.icon to ElevatedButton.icon
             onPressed: _isLoading ? null : () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back, color: mainColor),
-            label: const Text('REGRESAR', style: TextStyle(color: mainColor)),
-            style: OutlinedButton.styleFrom(
+            icon: Icon(Icons.arrow_back, color: Colors.white), // Icon color set to white
+            label: Text('REGRESAR', style: TextStyle(color: Colors.white)), // Text color set to white
+            style: ElevatedButton.styleFrom( // Changed styleFrom for ElevatedButton
+              backgroundColor: mainBlue, // Background color set to mainBlue
               padding: const EdgeInsets.symmetric(vertical: 16),
-              side: const BorderSide(color: mainColor),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
           ),
@@ -167,7 +164,7 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
               style: const TextStyle(color: Colors.white),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: mainColor,
+              backgroundColor: accentOrange,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
@@ -178,9 +175,8 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
   }
 
   String _formatDate(DateTime date) {
-    final days = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
-    final months = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
-    return '${days[date.weekday % 7]}. ${date.day} ${months[date.month - 1]}. ${date.year}';
+    final ymd = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+    return ymd;
   }
 
   Future<void> _confirmReservation(BuildContext context) async {
@@ -195,10 +191,13 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
         return;
       }
 
+      final fechaYMD = "${widget.fecha.year}-${widget.fecha.month.toString().padLeft(2, '0')}-${widget.fecha.day.toString().padLeft(2, '0')}";
+
       final query = await FirebaseFirestore.instance
           .collection('reservas')
-          .where('cancha', isEqualTo: widget.cancha['nombre'])
-          .where('fecha', isEqualTo: widget.fecha.toIso8601String())
+          .where('canchaNombre', isEqualTo: widget.cancha['nombre'])
+          .where('complejoNombre', isEqualTo: widget.complejo['nombre'])
+          .where('fecha', isEqualTo: fechaYMD)
           .where('horario', isEqualTo: widget.horario)
           .get();
 
@@ -209,20 +208,14 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
         return;
       }
 
-      String nombreCompleto = user.displayName ?? 'Sin nombre';
-      final userDoc = await FirebaseFirestore.instance.collection('usuarios').doc(user.uid).get();
-      if (userDoc.exists) {
-        nombreCompleto = userDoc.data()?['nombreCompleto'] ?? nombreCompleto;
-      }
-
       final reserva = {
-        'complejo': widget.complejo['nombre'],
-        'cancha': widget.cancha['nombre'],
+        'complejoNombre': widget.complejo['nombre'],
+        'canchaNombre': widget.cancha['nombre'],
         'jugadores': widget.cancha['jugadores'],
         'precio': widget.precio,
-        'fecha': widget.fecha.toIso8601String(),
+        'fecha': fechaYMD,
         'horario': widget.horario,
-        'nombre': nombreCompleto,
+        'nombre': user.displayName ?? 'Sin nombre',
         'correo': user.email,
         'timestamp': FieldValue.serverTimestamp(),
         'complejoTelefono': widget.complejo['telefono'],
@@ -243,9 +236,7 @@ class _ConfirmacionReservaPageState extends State<ConfirmacionReservaPage> {
         SnackBar(content: Text('Error al confirmar reserva: $e'), backgroundColor: Colors.red),
       );
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 }

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:resrevacion_canchas/ConfirmacionReservaPage.dart';
@@ -44,6 +45,7 @@ class _ReservaPageState extends State<ReservaPage> {
     '6:00-7:00 PM',
     '7:00-8:00 PM',
     '8:00-9:00 PM',
+    '9:00-10:00 PM', // Corrected a typo here if it was 9:00-9:00
   ];
 
   String _getPrecioNumerico() {
@@ -57,8 +59,12 @@ class _ReservaPageState extends State<ReservaPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.complejo['nombre'] ?? 'Reserva'),
+        title: Text(
+          widget.complejo['nombre'] ?? 'Reserva',
+          style: const TextStyle(color: Colors.white), // Title text color set to white
+        ),
         backgroundColor: _colorPrimario,
+        iconTheme: const IconThemeData(color: Colors.white), // Back button color set to white
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -269,6 +275,9 @@ class _ReservaPageState extends State<ReservaPage> {
       final String complejoNombre = widget.complejo['nombre'];
       final String fechaString = _selectedDate!.toIso8601String().split('T').first;
 
+      // Adjust the query to match the date format stored in Firestore if it's not 'YYYY-MM-DD'
+      // If 'fecha' in Firestore is stored as a Timestamp, you'll need to query differently.
+      // Assuming it's a string 'YYYY-MM-DD' based on the current code.
       final querySnapshot = await firestore
           .collection('reservas')
           .where('canchaNombre', isEqualTo: canchaNombre)

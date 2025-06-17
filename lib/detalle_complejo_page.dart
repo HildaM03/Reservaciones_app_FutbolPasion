@@ -44,8 +44,12 @@ class _DetalleComplejoPageState extends State<DetalleComplejoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.complejo['nombre']),
+        title: Text(
+          widget.complejo['nombre'],
+          style: const TextStyle(color: Colors.white), // Title text color set to white
+        ),
         backgroundColor: naranjaOscuro,
+        iconTheme: const IconThemeData(color: Colors.white), // Back button color set to white
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

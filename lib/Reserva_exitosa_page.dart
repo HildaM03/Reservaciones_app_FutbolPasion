@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'PagoTransferenciaScreen.dart';
 
 class ReservaExitosaPage extends StatelessWidget {
   final Map<String, dynamic> reserva;
@@ -15,7 +16,7 @@ class ReservaExitosaPage extends StatelessWidget {
     final horario = reserva['horario']?.toString() ?? 'No especificado';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F9FD), // Fondo azul muy claro
+      backgroundColor: const Color(0xFFF5F9FD),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -48,7 +49,7 @@ class ReservaExitosaPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 
-                // Título del complejo (azul)
+                // Título del complejo
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                   decoration: BoxDecoration(
@@ -64,7 +65,7 @@ class ReservaExitosaPage extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    reserva['complejo']?.toString() ?? 'Centro Deportivo CanchasGT',
+                    reserva['complejoNombre']?.toString() ?? 'Centro Deportivo CanchasGT',
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -88,7 +89,7 @@ class ReservaExitosaPage extends StatelessWidget {
                         _buildDetailRow(
                           icon: Icons.sports_soccer,
                           label: 'Cancha',
-                          value: '"${reserva['cancha']?.toString() ?? 'No especificada'}"',
+                          value: '"${reserva['canchaNombre']?.toString() ?? 'No especificada'}"',
                         ),
                         
                         const Divider(color: Colors.grey, height: 24),
@@ -151,7 +152,7 @@ class ReservaExitosaPage extends StatelessWidget {
                 
                 const SizedBox(height: 40),
                 
-                // Botón ACEPTAR
+                // Botón ACEPTAR (modificado para navegar a PagoTransferenciaScreen)
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -165,7 +166,12 @@ class ReservaExitosaPage extends StatelessWidget {
                       shadowColor: Colors.blue[900],
                     ),
                     onPressed: () {
-                      Navigator.popUntil(context, (route) => route.isFirst);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PagoTransferenciaScreen(reserva: reserva),
+                        ),
+                      );
                     },
                     child: const Text(
                       'ACEPTAR',

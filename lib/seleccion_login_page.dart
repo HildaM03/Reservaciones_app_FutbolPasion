@@ -12,65 +12,119 @@ class SeleccionLoginPage extends StatelessWidget {
     final Color blanco = Colors.white;
 
     return Scaffold(
-      backgroundColor: azulElectrico,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.sports_soccer, size: 100, color: blanco),
-              const SizedBox(height: 20),
-              Text(
-                'Fútbol Pasión',
-                style: TextStyle(
-                  color: naranjaFuerte,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 6,
-                      color: Colors.black45,
-                      offset: Offset(2, 2),
-                    ),
-                  ],
-                ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF0D47A1), Color(0xFF1976D2)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(height: 40),
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: blanco,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: AnimatedRotation(
+                          turns: 0.05,
+                          duration: const Duration(seconds: 1),
+                          child: Icon(
+                            Icons.sports_soccer,
+                            size: 80,
+                            color: naranjaFuerte,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        'Bienvenido(a)',
+                        style: TextStyle(
+                          color: blanco,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '¿Cómo deseas ingresar?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: blanco.withOpacity(0.8),
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const LoginUsersPage()),
+                          );
+                        },
+                        icon: const Icon(Icons.person),
+                        label: const Text('Ingresar como Usuario'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: naranjaFuerte,
+                          foregroundColor: blanco,
+                          elevation: 8,
+                          shadowColor: Colors.black45,
+                          minimumSize: const Size(double.infinity, 50),
+                          textStyle: const TextStyle(fontSize: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const LoginAdminPage()),
+                          );
+                        },
+                        icon: const Icon(Icons.admin_panel_settings),
+                        label: const Text('Ingresar como Administrador'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: blanco,
+                          foregroundColor: azulElectrico,
+                          elevation: 6,
+                          shadowColor: Colors.black26,
+                          minimumSize: const Size(double.infinity, 50),
+                          textStyle: const TextStyle(fontSize: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 25), // Espacio donde estaba el texto eliminado
+                ],
               ),
-              const SizedBox(height: 40),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginUsersPage()),
-                  );
-                },
-                icon: const Icon(Icons.person),
-                label: const Text('Ingresar como Usuario'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: naranjaFuerte,
-                  foregroundColor: blanco,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginAdminPage()),
-                  );
-                },
-                icon: const Icon(Icons.admin_panel_settings),
-                label: const Text('Ingresar como Administrador'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: blanco,
-                  foregroundColor: azulElectrico,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

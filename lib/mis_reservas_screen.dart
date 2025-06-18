@@ -351,7 +351,7 @@ class _MisReservasScreenState extends State<MisReservasScreen> {
       colorEtiquetaFecha = Colors.green;
     } else if (diferenciaDias <= 7) {
       etiquetaFecha = '📅 Esta semana';
-      colorEtiquetaFecha = Colors.yellow;
+      colorEtiquetaFecha = Colors.pink;
     } else {
       etiquetaFecha = '🚀 Futura';
       colorEtiquetaFecha = Colors.purple;

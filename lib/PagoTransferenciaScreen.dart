@@ -40,7 +40,7 @@ class _PagoTransferenciaScreenState extends State<PagoTransferenciaScreen> {
   String _formatearMonto(String text) {
     try {
       double value = double.parse(text);
-      final formatter = NumberFormat.currency(symbol: 'L ', decimalDigits: 2); // Separado
+      final formatter = NumberFormat.currency(symbol: 'L ', decimalDigits: 2);
       return formatter.format(value);
     } catch (e) {
       return text;
@@ -76,31 +76,21 @@ class _PagoTransferenciaScreenState extends State<PagoTransferenciaScreen> {
       if (_formKey.currentState!.validate()) {
         final numeroComprobante = _generarNumeroComprobante();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Transferencia realizada correctamente'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 1),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ComprobanteTransferenciaScreen(
+              reserva: widget.reserva,
+              cuentaOrigen: _cuentaOrigenController.text,
+              cuentaDestino: _cuentaDestinoController.text,
+              descripcion: _descripcionController.text,
+              fecha: _fechaActual,
+              hora: _horaActual,
+              monto: _formatearMonto(_montoController.text),
+              numeroComprobante: numeroComprobante,
+            ),
           ),
         );
-
-        Future.delayed(const Duration(seconds: 1), () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ComprobanteTransferenciaScreen(
-                reserva: widget.reserva,
-                cuentaOrigen: _cuentaOrigenController.text,
-                cuentaDestino: _cuentaDestinoController.text,
-                descripcion: _descripcionController.text,
-                fecha: _fechaActual,
-                hora: _horaActual,
-                monto: _formatearMonto(_montoController.text),
-                numeroComprobante: numeroComprobante,
-              ),
-            ),
-          );
-        });
       }
     } else {
       if (_validarPaso(_currentStep)) {
@@ -146,10 +136,10 @@ class _PagoTransferenciaScreenState extends State<PagoTransferenciaScreen> {
       appBar: AppBar(
         title: const Text(
           'Pago por Transferencia',
-          style: TextStyle(color: Colors.white), // Title text color set to white
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue[800],
-        iconTheme: const IconThemeData(color: Colors.white), // Back button color set to white
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Form(
         key: _formKey,
@@ -173,20 +163,20 @@ class _PagoTransferenciaScreenState extends State<PagoTransferenciaScreen> {
                       ),
                       child: Text(
                         isLastStep ? 'Confirmar Transferencia' : 'Siguiente',
-                        style: const TextStyle(fontSize: 16, color: Colors.white), // Text color set to white
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),
                   if (_currentStep > 0) ...[
                     const SizedBox(width: 15),
-                    ElevatedButton( // Changed from OutlinedButton to ElevatedButton
+                    ElevatedButton(
                       onPressed: details.onStepCancel,
-                      style: ElevatedButton.styleFrom( // Using ElevatedButton.styleFrom
-                        backgroundColor: Colors.blue[800], // Set background color to blue
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[800],
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text('Atrás', style: TextStyle(fontSize: 16, color: Colors.white)), // Text color set to white
+                      child: const Text('Atrás', style: TextStyle(fontSize: 16, color: Colors.white)),
                     ),
                   ],
                 ],
@@ -282,7 +272,6 @@ class _PagoTransferenciaScreenState extends State<PagoTransferenciaScreen> {
               ),
             ),
           ],
-          // Customizing stepper theme for blue numbers
           connectorColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.selected)) return Colors.blue[800]!;
@@ -292,14 +281,14 @@ class _PagoTransferenciaScreenState extends State<PagoTransferenciaScreen> {
           stepIconBuilder: (context, state) {
             if (state == StepState.indexed) {
               return CircleAvatar(
-                backgroundColor: Colors.blue[800], // Set step circle color to blue
+                backgroundColor: Colors.blue[800],
                 child: Text(
-                  (_currentStep == 0) ? '1' : (_currentStep == 1 ? '2' : '3'), // Manually set numbers for clarity
+                  (_currentStep == 0) ? '1' : (_currentStep == 1 ? '2' : '3'),
                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               );
             }
-            return null; // Let the default builder handle other states (e.g., complete)
+            return null;
           },
         ),
       ),

@@ -93,7 +93,7 @@ class _ComprobanteTransferenciaScreenState extends State<ComprobanteTransferenci
                 _buildRow('Descripción:', widget.descripcion, labelStyle, valueStyle),
                 _buildRow('Fecha:', widget.fecha, labelStyle, valueStyle),
                 _buildRow('Hora:', widget.hora, labelStyle, valueStyle),
-                _buildRow('Monto:', 'L ${widget.monto}', labelStyle, valueStyle),
+                _buildRow('Monto:', '${widget.monto}', labelStyle, valueStyle),
               ],
             ),
           ),

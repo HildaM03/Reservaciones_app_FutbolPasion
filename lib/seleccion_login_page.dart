@@ -43,13 +43,12 @@ class SeleccionLoginPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: AnimatedRotation(
-                          turns: 0.05,
-                          duration: const Duration(seconds: 1),
-                          child: Icon(
-                            Icons.sports_soccer,
-                            size: 80,
-                            color: naranjaFuerte,
+                        child: ClipOval(
+                          child: Image.asset(
+                            'assets/logo.png',
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
@@ -121,7 +120,7 @@ class SeleccionLoginPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 25), // Espacio donde estaba el texto eliminado
+                  const SizedBox(height: 25),
                 ],
               ),
             ),

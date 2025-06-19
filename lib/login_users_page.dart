@@ -186,7 +186,7 @@ class _LoginUsersPageState extends State<LoginUsersPage> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Fútbol Pasión',
+                      'Fútbol Ya',
                       style: TextStyle(
                         color: naranjaFuerte,
                         fontWeight: FontWeight.bold,
